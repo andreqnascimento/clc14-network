@@ -1,6 +1,6 @@
 variable "vpc_name" {
   type    = string
-  default = "vpc-terraform-V2"
+  default = "vpc-terraform-v2"
 }
 
 resource "aws_vpc" "minha_vpc" {
@@ -12,6 +12,23 @@ resource "aws_vpc" "minha_vpc" {
   }
 }
 
+# Correcao primeira issue
+resource "aws_flow_log" "example" {
+  log_destination      = "arn:aws:s3:::anascimento-terraform-clc14"
+  log_destination_type = "s3"
+  traffic_type         = "ALL"
+  vpc_id               = aws_vpc.minha_vpc.id
+}
+
+# Correcao segunda issue
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.minha_vpc.id
+  
+  tags = {
+    Name = "my-iac-sg"
+  }
+}
+
 ## Cria subnet privada na us-east-1a
 resource "aws_subnet" "private_subnet_1a" {
   vpc_id            = aws_vpc.minha_vpc.id
@@ -19,7 +36,7 @@ resource "aws_subnet" "private_subnet_1a" {
   availability_zone = "us-east-1a"
 
   tags = {
-    Name = "priv-subnet-1A"
+    Name = "priv-subnet-1a"
   }
 }
 
@@ -34,7 +51,7 @@ resource "aws_route_table" "priv_rt_1a" {
 
 
   tags = {
-    Name = "priv-rt-1a"
+    Name = "priv-rt-1A"
   }
 }
 
